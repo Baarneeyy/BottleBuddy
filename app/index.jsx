@@ -1,4 +1,5 @@
-import { View, Text, Button, Pressable } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import MapView from 'react-native-maps';
 import { Link } from 'expo-router';
 
 export default function Page() {
@@ -6,15 +7,29 @@ export default function Page() {
   <View>
     <Text>BottleBuddy</Text>
     <Link href="/app" asChild>
-        <Pressable>
-            <Text>
-                Image Picker soft
-            </Text>
-        </Pressable>
+        <Button title="Image Picker soft"/>
     </Link>
-    <Text>
-        Currently in active development!<br/><br/>
-        Made by Tomas Vsetecka
-    </Text>
+
+    <Link href="/bottleSelect" asChild>
+        <Button title='Give Bottles!'/>
+    </Link>
+
+    <Link href="/bottlePickUp" asChild>
+        <Button title="Pick Up Bottles!"/>
+    </Link>
+    <ScrollView>
+      <MapView style={styles.map} />
+      <Text>
+          Currently in active development!{'\n'}{'\n'}
+          Made by Tomas Vsetecka
+      </Text>
+    </ScrollView>
   </View>
 )}
+
+const styles = StyleSheet.create({
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+})
