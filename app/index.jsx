@@ -1,22 +1,29 @@
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView, Pressable } from 'react-native';
 //import MapView from 'react-native-maps';
 //<MapView style={styles.map} />
 import { Link } from 'expo-router';
 
 export default function Page() {
+
+
   return (
   <View>
     <Text>BottleBuddy</Text>
     <Link href="/app" asChild>
-        <Button title="Image Picker soft"/>
+      <Pressable>
+        <Text>Image Picker soft</Text>
+      </Pressable>
     </Link>
 
     <Link href="/bottleSelect" asChild>
-        <Button title='Give Bottles!'/>
+        <Pressable>
+          <Text>Create an Order!</Text>
+        </Pressable>
     </Link>
-
     <Link href="/bottlePickUp" asChild>
-        <Button title="Pick Up Bottles!"/>
+      <Pressable>
+        <Text>Pick Up Bottles!</Text>
+      </Pressable>
     </Link>
     <ScrollView>
       <Text>
@@ -24,6 +31,7 @@ export default function Page() {
           Made by Tomas Vsetecka
       </Text>
     </ScrollView>
+    
   </View>
 )}
 

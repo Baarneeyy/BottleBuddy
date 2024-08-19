@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Button, Text, TextInput } from 'react-native';
+import { View, Button, Text, TextInput, Pressable } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import { Link } from "expo-router"
@@ -21,8 +21,10 @@ const MapViewExample = () => {
   return (
     <View style={{ flex: 1 }}>
       <Link href="/" asChild>
-            <Button title="Go to Menu"/>
-        </Link>
+        <Pressable>
+          <Button title="Go to Menu"/>
+        </Pressable>
+      </Link>
       
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}
