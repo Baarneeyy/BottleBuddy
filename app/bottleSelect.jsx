@@ -1,24 +1,30 @@
 import * as React from "react";
-import { View, Text, Button } from "react-native";
-import { useForm } from "react-hook-form";
-import { Range } from "react-range";
+import { useState } from "react";
+import { View, Text, Button, TextInput, StyleSheet } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import MapView, { Marker } from 'react-native-maps';
+
+import PocketBase from 'pocketbase';
+const pb = new PocketBase('http://127.0.0.1:8090');
+
 
 import { Link } from "expo-router"
 
-import RangeSlider from 'react-range-slider-input';
-
 export default function App() {
   const {
-    register,
+    control,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      numOfBottles: "",
+      pricePerBottle: "",
+    },
+  })
 
-  const [values, setValues] = React.useState([50])
  
   const getMoviesFromApi = () => {
-    return fetch('https://reactnative.dev/movies.json')
+    return fetch('http://127.0.0.1:8090/api/collections/orders/records')
       .then(response => response.json())
       .then(json => {
         return json.movies;
@@ -28,11 +34,16 @@ export default function App() {
       });
   };
 
-  const onSubmit = (data) => getMoviesFromApi()
+  const bottleOrder = {
+    "numOfBottles": parseInt(data["numOfBottles"]),
+    "pricePerBottle": parseInt(data["pricePerBottle"])
+  }
+  
+  ///api/collections/orders/records
 
-  console.log(watch("example")) // watch input value by passing the name of it
+  const onSubmit = (data) => console.log(data);
 
-
+  const record = pb.collection('orders').create(bottleOrder);
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     
@@ -40,20 +51,43 @@ export default function App() {
         <Link href="/" asChild>
             <Button title="Go to Menu"/>
         </Link>
-        <form onSubmit={handleSubmit(onSubmit)}>
-        {/* register your input into the hook by invoking the "register" function */}
-        <input defaultValue="num. of bottles" {...register("example")} />
+        
+        <View>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder="how many bottles?"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="numOfBottles"
+          />
+          {errors.numOfBottles && <Text>This is required.</Text>}
 
+          <Controller
+            control={control}
+            rules={{
+              maxLength: 100,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                placeholder="for free/ for a fee"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name="pricePerBottle"
+          />
 
-        {/* include validation with required or other standard HTML validation rules */}
-        <input {...register("exampleRequired", { required: true })} />
-        {/* errors will return when field validation fails  */}
-        {errors.exampleRequired && <span>This field is required</span>}
-
-        <select {...register("forPrice")}>
-            <option value="Yes">NumForPrice</option>
-            <option value="No">No</option>
-        </select>
+          <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+        </View>
         
         <Text>
             {'\n'}
@@ -61,42 +95,14 @@ export default function App() {
             {'\n'}
             {'\n'}
         </Text>
-
-        <Range {...register("numOfBottles")}
-            label="Select your value"
-            step={0.1}
-            min={0}
-            max={100}
-            values={values}
-            onChange={(values) => setValues(values)}
-            renderTrack={({ props, children }) => (
-                <div
-                {...props}
-                style={{
-                    ...props.style,
-                    height: "6px",
-                    width: "100%",
-                    backgroundColor: "#ccc",
-                }}
-                >
-                {children}
-                </div>
-            )}
-            renderThumb={({ props }) => (
-                <div
-                {...props}
-                key={props.key}
-                style={{
-                    ...props.style,
-                    height: "42px",
-                    width: "42px",
-                    backgroundColor: "#999",
-                }}
-                />
-            )}
-            />
-        <input type="submit" />
-        </form>
+        <MapView style={styles.map} />
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+})

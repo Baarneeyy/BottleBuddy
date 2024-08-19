@@ -1,5 +1,6 @@
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import MapView from 'react-native-maps';
+//import MapView from 'react-native-maps';
+//<MapView style={styles.map} />
 import { Link } from 'expo-router';
 
 export default function Page() {
@@ -18,7 +19,6 @@ export default function Page() {
         <Button title="Pick Up Bottles!"/>
     </Link>
     <ScrollView>
-      <MapView style={styles.map} />
       <Text>
           Currently in active development!{'\n'}{'\n'}
           Made by Tomas Vsetecka
