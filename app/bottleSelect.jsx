@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, select, option} from 'react';
 import { View, Text, Button, TextInput, StyleSheet, Pressable } from "react-native";
 import { useForm, Controller } from "react-hook-form";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 //import MapView, { Marker } from 'react-native-maps';
 
 import PocketBase from 'pocketbase';
@@ -13,6 +14,8 @@ export default function App() {
   const {
     control,
     handleSubmit,
+    register,
+    resetField,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -51,13 +54,23 @@ export default function App() {
     pb.authStore.clear();
   }
 
-  const [titleText, setTitleText] = useState("not authed");
-  
+  const [selectedValue, setSelectedValue] = useState('false');
+
+  const handleSelectChange = (event) => {
+    setSelectedValue(!selectedValue);
+    resetField('pricePerBottle')
+  };
+
+  const isShowed = (selectedValue === 'true');
+
+  const [wasAuthed, setWasAuthed] = useState("false");
+  const isAuthed = (wasAuthed === 'true');
+
   const onPressThirdButton = () => {
     if (pb.authStore.token == "") {
-      setTitleText("still not authed")
+      setTitleText("false")
     } else {
-      setTitleText(pb.authStore.token)
+      setWasAuthed("true")
     }
   }
 
@@ -102,14 +115,17 @@ export default function App() {
           </Pressable>
         </Link>
         
-        <View>
-          <Controller
+        <View style={styles.formContainer}>
+          <Text style={styles.formTitle}>
+            Send Bottles!
+          </Text>
+          <Controller 
             control={control}
             rules={{
               required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
+              <TextInput style={styles.formField}
                 placeholder="how many bottles?"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -119,14 +135,23 @@ export default function App() {
             name="numOfBottles"
           />
           {errors.numOfBottles && <Text>This is required.</Text>}
-
-          <Controller
+          <Text>For...:</Text>
+          <select value={selectedValue} onChange={handleSelectChange}>
+            <option value="false">Free</option>
+            <option value="true">A Fee</option>
+          </select>
+          <BouncyCheckbox 
+            isChecked={selectedValue} onPress={handleSelectChange}
+          />
+          
+          {selectedValue && <Controller
             control={control}
             rules={{
               maxLength: 100,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
+              <TextInput {...register('pricePerBottle')}
+                style={styles.formField}
                 placeholder="for free/ for a fee"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -134,12 +159,17 @@ export default function App() {
               />
             )}
             name="pricePerBottle"
-          />
-
-          <Button title="Submit" onPress={handleSubmit(onSubmit)} />
-          <Button title="auth" onPress={auth}/>
-          <Button title={titleText}onPress={onPressThirdButton}/>
-          <Text></Text>
+          />}
+          <Pressable onPress={handleSubmit(onSubmit)} style={styles.formButton}>
+            <Text>SEND</Text>
+          </Pressable>
+          <Pressable onPress={() => {
+            auth();
+            onPressThirdButton();
+          }} style={styles.formButton} value={wasAuthed}>
+            <Text>Auth</Text>
+          </Pressable>
+          {isAuthed &&<Text>U can send now</Text>}
         </View>
         
         <Text>
@@ -157,5 +187,37 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  formContainer: {
+    alignItems: 'center',
+    
+  },
+  formTitle: {
+    fontWeight: 200,
+    textAlign: 'center',
+    fontSize: 36
+  },
+  formField: {
+    width: '30%',
+    height: 50,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    textAlign: 'center'
+  },
+  formButton: {
+    width: '30%',
+    height: 54,
+    backgroundColor: '#3377ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'solid',
+    borderWidth: '6px',
+    borderColor: '#000000',
+    marginBottom: '1em'
   },
 })
