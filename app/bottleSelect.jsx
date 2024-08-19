@@ -136,14 +136,12 @@ export default function App() {
           />
           {errors.numOfBottles && <Text>This is required.</Text>}
           <Text>For...:</Text>
-          <select value={selectedValue} onChange={handleSelectChange}>
-            <option value="false">Free</option>
-            <option value="true">A Fee</option>
-          </select>
-          <BouncyCheckbox 
-            isChecked={selectedValue} onPress={handleSelectChange}
-          />
           
+          <View style={styles.formCheckBox}>
+            <BouncyCheckbox 
+              isChecked={selectedValue} onPress={handleSelectChange}
+            />
+          </View>
           {selectedValue && <Controller
             control={control}
             rules={{
@@ -185,20 +183,19 @@ export default function App() {
 
 const styles = StyleSheet.create({
   map: {
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 100,
   },
   formContainer: {
     alignItems: 'center',
     
   },
   formTitle: {
-    fontWeight: 200,
     textAlign: 'center',
     fontSize: 36
   },
   formField: {
-    width: '30%',
+    width: '60%',
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -210,14 +207,17 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   formButton: {
-    width: '30%',
+    width: "60%",
     height: 54,
     backgroundColor: '#3377ff',
     alignItems: 'center',
     justifyContent: 'center',
     borderStyle: 'solid',
-    borderWidth: '6px',
+    borderWidth: 6,
     borderColor: '#000000',
-    marginBottom: '1em'
+    marginBottom: 30
   },
+  formCheckBox: {
+    alignSelf: 'center'
+  }
 })
