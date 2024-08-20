@@ -2,10 +2,10 @@ import React, {useState, select, option} from 'react';
 import { View, Text, Button, TextInput, StyleSheet, Pressable } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-//import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://f11b-46-229-238-250.ngrok-free.app');
 
 
 import { Link } from "expo-router"
@@ -27,30 +27,37 @@ export default function App() {
 
   const onSubmit = (data) => {
     let bottleOrder = {
-      "numOfBottles": parseInt(data["numOfBottles"]),
-      "pricePerBottle": parseInt(data["pricePerBottle"])
+      "numOfBottles": data.numOfBottles,
+      "pricePerBottle": data.pricePerBottle,
+      "orderPlace": data.orderPlace
     }
-    console.log(data, bottleOrder);
+    console.log(bottleOrder);
 
-    sendOrderRequest(parseInt(data["numOfBottles"]), parseInt(data["pricePerBottle"]))
+    //sendOrder(parseInt(data["numOfBottles"]), parseInt(data["pricePerBottle"]))
   };
-  
+
+
   const auth = async () => {
     try {
+      pb.autoCancellation(false);
       await pb.admins.authWithPassword('tom.vseteckaa@gmail.com', 'ZtudZw9x1xGV7k');
     } catch (error) {
-      console.log(error.originalError)
-      console.error('Error:', error);
-      return null;
+      console.log(error);
+      console.log(error.originalError); // true
     }
     console.log(pb.authStore.token)
+    if (pb.authStore.token == "") {
+      setWasAuthed("false")
+    } else {
+      setWasAuthed("true")
+    }
+    
 
     //pb.authStore.clear();
   };
 
   const print = () => {
-    console.log(pb.authStore.token)
-    setTitleText(pb.authStore.token)
+    alert(pb.authStore.token)
     pb.authStore.clear();
   }
 
@@ -61,17 +68,35 @@ export default function App() {
     resetField('pricePerBottle')
   };
 
-  const isShowed = (selectedValue === 'true');
-
   const [wasAuthed, setWasAuthed] = useState("false");
   const isAuthed = (wasAuthed === 'true');
 
-  const onPressThirdButton = () => {
-    if (pb.authStore.token == "") {
-      setTitleText("false")
-    } else {
-      setWasAuthed("true")
-    }
+  const [region, setRegion] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  const [orderPlace, setOrderPlace] = useState()
+
+  const handleConfirm = () => {
+      setOrderPlace(region)
+  }
+
+  const onRegionChangeComplete = (newRegion) => {
+    setRegion(newRegion);
+  };
+
+  const sendOrder = async () => {
+    const bottleOrder1 = {
+      "numOfBottles": parseInt(data["numOfBottles"]),
+      "pricePerBottle": parseInt(data["pricePerBottle"]),
+      "orderPlace": data["orderPlace"],
+      "orderMaker": "dzjqyfhenbxmk7g"
+    };
+  
+    const record = await pb.collection('orders').create(bottleOrder1);
   }
 
   const sendOrderRequest = async (numOfBottles, pricePerBottle) => {
@@ -79,9 +104,11 @@ export default function App() {
     const payload = {
       numOfBottles: numOfBottles,
       pricePerBottle: pricePerBottle,
+      orderPlace: orderPlace
     };
   
     try {
+      pb.autoCancellation(false);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -125,7 +152,8 @@ export default function App() {
               required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput style={styles.formField}
+              <TextInput {...register('numOfBottles')}
+                style={styles.formField}
                 placeholder="how many bottles?"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -135,7 +163,7 @@ export default function App() {
             name="numOfBottles"
           />
           {errors.numOfBottles && <Text>This is required.</Text>}
-          <Text>For...:</Text>
+          <Text>For a fee?</Text>
           
           <View style={styles.formCheckBox}>
             <BouncyCheckbox 
@@ -150,7 +178,7 @@ export default function App() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput {...register('pricePerBottle')}
                 style={styles.formField}
-                placeholder="for free/ for a fee"
+                placeholder="price per bottle"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -158,24 +186,48 @@ export default function App() {
             )}
             name="pricePerBottle"
           />}
-          <Pressable onPress={handleSubmit(onSubmit)} style={styles.formButton}>
+          <Pressable onPress={onSubmit} style={styles.formButton}>
             <Text>SEND</Text>
           </Pressable>
           <Pressable onPress={() => {
             auth();
-            onPressThirdButton();
           }} style={styles.formButton} value={wasAuthed}>
             <Text>Auth</Text>
           </Pressable>
           {isAuthed &&<Text>U can send now</Text>}
         </View>
-        
-        <Text>
-            {'\n'}
-            {'\n'}
-            {'\n'}
-            {'\n'}
-        </Text>
+        <View style={styles.formContainer}>
+          <Controller 
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput {...register('orderPlace')}
+                  style={styles.formField}
+                  placeholder="where bottles at?"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={JSON.stringify(orderPlace)}
+                />
+              )}
+              name="placeOfOrder"
+            />
+          <Pressable onPress={handleConfirm} style={styles.formButton}>
+            <Text>
+              Set Pick-Up Point
+            </Text>
+          </Pressable>
+        </View>
+        <MapView 
+          style={styles.map}
+          initialRegion={region}
+          onRegionChangeComplete={onRegionChangeComplete}>
+          <Marker coordinate={{
+            latitude: region.latitude, 
+            longitude: region.longitude,
+          }}/>
+        </MapView>
         
     </View>
   )
@@ -183,8 +235,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   map: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '35%',
   },
   formContainer: {
     alignItems: 'center',
