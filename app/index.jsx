@@ -4,7 +4,7 @@ import { View, Text, Button, StyleSheet, ScrollView, Pressable } from 'react-nat
 import { Link } from 'expo-router';
 
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://f11b-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://ce67-46-229-238-250.ngrok-free.app');
 
 export default function Page() {
 
@@ -29,7 +29,7 @@ export default function Page() {
   return (
   <View style={styles.homeMenuContainer}>
     <Text>BottleBuddy</Text>
-    <Link href="/app" asChild>
+    <Link href="/exampleForm" asChild>
       <Pressable style={styles.homeMenuItem}>
         <Text>Image Picker soft</Text>
       </Pressable>

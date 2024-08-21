@@ -5,7 +5,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import MapView, { Marker } from 'react-native-maps';
 
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://f11b-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://ce67-46-229-238-250.ngrok-free.app');
 
 
 import { Link } from "expo-router"
@@ -14,27 +14,18 @@ export default function App() {
   const {
     control,
     handleSubmit,
-    register,
     resetField,
     formState: { errors },
   } = useForm({
     defaultValues: {
       numOfBottles: "",
       pricePerBottle: "",
+      orderPlace: ""
     },
   })  
   ///api/collections/orders/records
 
-  const onSubmit = (data) => {
-    let bottleOrder = {
-      "numOfBottles": data.numOfBottles,
-      "pricePerBottle": data.pricePerBottle,
-      "orderPlace": data.orderPlace
-    }
-    console.log(bottleOrder);
-
-    //sendOrder(parseInt(data["numOfBottles"]), parseInt(data["pricePerBottle"]))
-  };
+  const onSubmit = (data) => console.log(data)
 
 
   const auth = async () => {
@@ -98,41 +89,7 @@ export default function App() {
   
     const record = await pb.collection('orders').create(bottleOrder1);
   }
-
-  const sendOrderRequest = async (numOfBottles, pricePerBottle) => {
-    const url = 'http://127.0.0.1:8090/api/collections/orders/records';
-    const payload = {
-      numOfBottles: numOfBottles,
-      pricePerBottle: pricePerBottle,
-      orderPlace: orderPlace
-    };
   
-    try {
-      pb.autoCancellation(false);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': pb.authStore.token,
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      const jsonResponse = await response.json();
-      console.log('Success:', jsonResponse);
-  
-      return jsonResponse;
-    } catch (error) {
-      console.error('Error:', error);
-      return null;
-    }
-  };
-  
-
   return (
     
     <View>
@@ -152,7 +109,7 @@ export default function App() {
               required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput {...register('numOfBottles')}
+              <TextInput
                 style={styles.formField}
                 placeholder="how many bottles?"
                 onBlur={onBlur}
@@ -176,7 +133,7 @@ export default function App() {
               maxLength: 100,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput {...register('pricePerBottle')}
+              <TextInput
                 style={styles.formField}
                 placeholder="price per bottle"
                 onBlur={onBlur}
@@ -186,9 +143,6 @@ export default function App() {
             )}
             name="pricePerBottle"
           />}
-          <Pressable onPress={onSubmit} style={styles.formButton}>
-            <Text>SEND</Text>
-          </Pressable>
           <Pressable onPress={() => {
             auth();
           }} style={styles.formButton} value={wasAuthed}>
@@ -203,7 +157,7 @@ export default function App() {
                 required: true,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput {...register('orderPlace')}
+                <TextInput
                   style={styles.formField}
                   placeholder="where bottles at?"
                   onBlur={onBlur}
@@ -217,6 +171,9 @@ export default function App() {
             <Text>
               Set Pick-Up Point
             </Text>
+          </Pressable>
+          <Pressable title="Submit" onPress={handleSubmit()} style={styles.formButton}>
+            <Text>SEND</Text>
           </Pressable>
         </View>
         <MapView 
