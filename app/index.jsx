@@ -29,13 +29,13 @@ export default function Page() {
   return (
   <View style={styles.homeMenuContainer}>
     <Text>BottleBuddy</Text>
-    <Link href="/exampleForm" asChild>
+    <Link href="/userRegistration" asChild>
       <Pressable style={styles.homeMenuItem}>
-        <Text>Image Picker soft</Text>
+        <Text>Join Up</Text>
       </Pressable>
     </Link>
 
-    <Link href="/bottleSelect" asChild>
+    <Link href="/exampleForm" asChild>
         <Pressable style={styles.homeMenuItem}>
           <Text>Create an Order!</Text>
         </Pressable>
