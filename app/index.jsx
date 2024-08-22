@@ -1,67 +1,63 @@
 import { View, Text, Button, StyleSheet, ScrollView, Pressable } from 'react-native';
-//import MapView from 'react-native-maps';
-//<MapView style={styles.map} />
+import { useState } from 'react';
 import { Link } from 'expo-router';
 
+import LoginForm from '../components/userLogin';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://ce67-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://0993-46-229-238-250.ngrok-free.app');
 
 export default function Page() {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const auth = async (e) => {
-    //e.preventDefault()
+  const [isAuthing, setIsAuthing] = useState('true');
+  const [isAuthed, setIsAuthed] = useState('false')
+
+  const getData = async (name) => {
     try {
-      //pb.autoCancellation(false)
-      const authData = await pb.collection('users').authWithPassword('vsetotv@gmail.com', 'ZtudZw9x1xGV7k');
-      console.log(authData)
-    } catch (error) {
-      console.error(error);
-      console.log(error.originalError); // true
+      const value = await AsyncStorage.getItem(name);
+      console.log(value)
+      if (value !== null) {
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
     }
-    //pb.authStore.clear();
   };
 
   const print = () => {
-    alert(pb.authStore.token)
-    pb.authStore.clear();
+    setIsAuthing(!isAuthing)
   }
 
   return (
   <View style={styles.homeMenuContainer}>
     <Text>BottleBuddy</Text>
     <Link href="/userRegistration" asChild>
-      <Pressable style={styles.homeMenuItem}>
-        <Text>Join Up</Text>
-      </Pressable>
+      <Button title="Join Up" />
     </Link>
 
-    <Link href="/exampleForm" asChild>
+    {!isAuthing && <Link href="/exampleForm" asChild>
         <Pressable style={styles.homeMenuItem}>
           <Text>Create an Order!</Text>
         </Pressable>
-    </Link>
-    <Link href="/bottlePickUp" asChild>
+    </Link>}
+    {!isAuthing && <Link href="/bottlePickUp" asChild>
       <Pressable style={styles.homeMenuItem}>
         <Text>Pick Up Bottles!</Text>
       </Pressable>
-    </Link> 
-    <Link href="/userRegistration" asChild>
-      <Pressable style={styles.homeMenuItem}>
-        <Text>Join!</Text>
-      </Pressable>
-    </Link> 
-    <ScrollView>
+    </Link>}
+    <View>
       <Text>
           Currently in active development!{'\n'}{'\n'}
           Made by Tomas Vsetecka
       </Text>
-    </ScrollView>
-    <Pressable style={styles.homeMenuItem} onPress={auth}>
-      <Text>Auth!</Text>
-    </Pressable>
+    </View>
     <Pressable style={styles.homeMenuItem} onPress={print}>
-      <Text>DeAuth!</Text>
+      <Text>Login</Text>
     </Pressable>     
+    {isAuthing && <LoginForm />}
   </View>
 )}
 

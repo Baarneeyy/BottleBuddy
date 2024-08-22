@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://1860-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://0993-46-229-238-250.ngrok-free.app');
 
 
 export default function App() {
