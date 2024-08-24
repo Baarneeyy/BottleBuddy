@@ -8,7 +8,7 @@ import { Link } from "expo-router"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://0993-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://2b7c-46-229-238-250.ngrok-free.app');
 
 export default function App() {
 
@@ -56,7 +56,7 @@ export default function App() {
 
   const auth = async () => {
     try {
-      const authData = await pb.collection('users').authWithPassword('vsetotv@gmail.com', 'ZtudZw9x1xGV7k');
+      const authData = await pb.collection('users').authWithPassword('vsetotv2@gmail.com', '123456');
         console.log(authData)
     } catch (error) {
         console.error(error);
@@ -86,13 +86,23 @@ export default function App() {
 
   const onSubmit = async (data) => {
     fullData = {...data, orderPlace, orderMaker}
-    console.log(fullData);
+    FullData = {
+      "numOfBottles": data["numOfBottles"],
+      "pricePerBottle": data["pricePerBottle"],
+      "orderPlaceLatitude": region["latitude"],
+      "orderPlaceLongitude": region["longitude"],
+      "orderPlaceLatitudeDelta": region["latitudeDelta"],
+      "orderPlaceLongitudeDelta": region["longitudeDelta"],
+      "orderMaker": orderMaker
+    }
+    console.log(FullData);
     // Handle form submission
-    const record = await pb.collection('orders').create(fullData);
+    const record = await pb.collection('orders').create(FullData);
     console.log(record)
   };
   const handleConfirm = () => {
     setOrderPlace(JSON.stringify(region))
+    console.log(JSON.stringify(region))
   }
 
   return (
