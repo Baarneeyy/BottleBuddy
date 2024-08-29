@@ -8,7 +8,7 @@ import { Link } from "expo-router"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://2b7c-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app');
 
 export default function App() {
 

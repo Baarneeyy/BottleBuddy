@@ -7,7 +7,7 @@ import LoginForm from '../components/userLogin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://2b7c-46-229-238-250.ngrok-free.app');
+const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app');
 
 export default function Page() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ export default function Page() {
       <Button title="Join Up" />
     </Link>
 
-    {!isAuthing && <Link href="/loadMapScreen" asChild>
+    {!isAuthing && <Link href="/createOrder" asChild>
         <Pressable style={styles.homeMenuItem}>
           <Text>Create an Order!</Text>
         </Pressable>
