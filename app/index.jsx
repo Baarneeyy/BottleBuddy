@@ -48,6 +48,11 @@ export default function Page() {
         <Text>Pick Up Bottles!</Text>
       </Pressable>
     </Link>}
+    {!isAuthing && <Link href="/test" asChild>
+      <Pressable style={styles.homeMenuItem}>
+        <Text>OrderView</Text>
+      </Pressable>
+    </Link>}
     <View>
       <Text>
           Currently in active development!{'\n'}{'\n'}
