@@ -6,8 +6,7 @@ import LoginForm from '../components/userLogin';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app');
+import pb from '../lib/pocketbase';
 
 export default function Page() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,9 +47,14 @@ export default function Page() {
         <Text>Pick Up Bottles!</Text>
       </Pressable>
     </Link>}
-    {!isAuthing && <Link href="/test" asChild>
+    {!isAuthing && <Link href="/orderViewFinal" asChild>
       <Pressable style={styles.homeMenuItem}>
         <Text>OrderView</Text>
+      </Pressable>
+    </Link>}
+    {!isAuthing && <Link href="/orderViewCustomer" asChild>
+      <Pressable style={styles.homeMenuItem}>
+        <Text>Collapsible</Text>
       </Pressable>
     </Link>}
     <View>

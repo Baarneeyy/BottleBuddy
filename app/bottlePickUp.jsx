@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Link } from "expo-router"
-import PocketBase from 'pocketbase';
+import pb from '../lib/pocketbase';
 
 const pickerScreen = () => {
   const [orders, setOrders] = useState([]);
@@ -10,9 +10,6 @@ const pickerScreen = () => {
   const profileButtonHandler = () => {
     setShowProfile(current => !current)
   }
-
-
-  const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app'); // Replace with your PocketBase API URL
 
   const loadOrders = async () => {
     try {
@@ -34,6 +31,9 @@ const pickerScreen = () => {
           <Text>My completed orders:</Text>
           <Text>Money made:</Text>
           <Text>Current Rating:</Text>
+          <Link href="/test" asChild>
+            <Button title="Select This?"/>
+          </Link>
         </View>)}
 
       <Link href="/" asChild>
@@ -56,7 +56,7 @@ const pickerScreen = () => {
               longitude: order.orderPlaceLongitude
             }}
             onSelect={() => {
-                console.log('HIHI; touched')
+              profileButtonHandler()
             }}
           >
             {/* Optional: Add a custom marker view */}

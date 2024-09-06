@@ -2,9 +2,7 @@ import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
-import PocketBase from 'pocketbase';
-const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app');
-
+import pb from '../lib/pocketbase';
 
 export default function App() {
   const { control, handleSubmit } = useForm();
