@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Switch, Button } from 'react-native';
 import Slider from '@react-native-community/slider';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import pb from '../lib/pocketbase';
 
 export default OrderPage = () => {
@@ -10,6 +13,8 @@ export default OrderPage = () => {
   const [locationLongitude, setLocationLongitude] = useState('');
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [isSecondCheckboxChecked, setIsSecondCheckboxChecked] = useState(false);
+
+  const [orderID, setOrderID] = useState("");
   
   const handleSliderValueChange = (value) => {
     setIsCheckboxChecked(value >= 0.5);
@@ -17,7 +22,7 @@ export default OrderPage = () => {
 
   const getOrderConfirm = async () => {
     try {
-      const record = await pb.collection('orders').getOne('b9gkq438xh3mesv', {
+      const record = await pb.collection('orders').getOne(orderID, {
         fields: 'orderConfirmPicker'
       });
       setIsSecondCheckboxChecked(record['orderConfirmPicker'])
@@ -28,6 +33,18 @@ export default OrderPage = () => {
       console.log(e)
     }
   }
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('selectedOrder');
+      if (value !== null) {
+        console.log('Retrieved data:', value);
+        setOrderID(value)
+      }
+    } catch (e) {
+      console.error('Failed to fetch data', e);
+    }
+  };  
 
   useEffect(() => {
     getOrderConfirm();
@@ -69,7 +86,7 @@ export default OrderPage = () => {
       <Switch value={isCheckboxChecked} onChange={() => setIsCheckboxChecked(!isCheckboxChecked)} />
       <Text>Picker Confirmation:</Text>
       <Switch value={isSecondCheckboxChecked} onChange={() => setIsSecondCheckboxChecked(!isSecondCheckboxChecked)} />
-      <Button title="Jeb" onPress={getOrderConfirm}/>
+      <Button title="Jeb" onPress={getData}/>
     </View>
   );
 };
