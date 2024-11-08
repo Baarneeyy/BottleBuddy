@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
 import pb from '../lib/pocketbase';
+import NavBtn from '../components/navBtn';
 
 export default function App() {
   const { control, handleSubmit } = useForm();
@@ -39,6 +40,7 @@ export default function App() {
         name="firstName"
         rules={{ required: true }}
         render={({ field: { onChange, onBlur, value } }) => (
+          
           <TextInput
             style={styles.input}
             placeholder="First name"
@@ -129,7 +131,7 @@ export default function App() {
           />
         )}
       />
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <NavBtn text="Submit" onPress={handleSubmit(onSubmit)}/>
     </View>
   );
 }

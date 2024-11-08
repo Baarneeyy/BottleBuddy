@@ -5,6 +5,7 @@ import Slider from '@react-native-community/slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import pb from '../lib/pocketbase';
+import NavBtn from '../components/navBtn';
 
 export default OrderPage = () => {
   const [orderPickUpEst, setOrderPickUpEst] = useState('');
@@ -85,8 +86,8 @@ export default OrderPage = () => {
       />
       <Switch value={isCheckboxChecked} onChange={() => setIsCheckboxChecked(!isCheckboxChecked)} />
       <Text>Picker Confirmation:</Text>
-      <Switch value={isSecondCheckboxChecked} onChange={() => setIsSecondCheckboxChecked(!isSecondCheckboxChecked)} />
-      <Button title="Jeb" onPress={getData}/>
+      <Switch disabled={true} value={isSecondCheckboxChecked} onChange={() => setIsSecondCheckboxChecked(!isSecondCheckboxChecked)} />
+      <NavBtn text="Jeb" onPress={getData}/>
     </View>
   );
 };

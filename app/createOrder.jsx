@@ -8,6 +8,7 @@ import { Link } from "expo-router"
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import pb from '../lib/pocketbase';
+import NavBtn from '../components/navBtn';
 
 export default function App() {
 
@@ -36,9 +37,6 @@ export default function App() {
 
     return { url, options };
 };
-
-
-
 
   const { control, handleSubmit } = useForm();
   const [orderPlace, setOrderPlace] = useState(10);
@@ -110,10 +108,10 @@ export default function App() {
       <View>
       <Text style={styles.formTitle}>Send Bottles</Text>
       <Link href="/" asChild>
-          <Button title="Go to Menu" />
+          <NavBtn text="Go to Menu" />
       </Link>
-      <Button title="Auth" onPress={auth} />
-      <Button title="deAuth" onPress={deAuth} />
+      <NavBtn text="Auth" onPress={auth} />
+      <NavBtn text="deAuth" onPress={deAuth} />
 
 
 
@@ -165,12 +163,12 @@ export default function App() {
             longitude: region.longitude,
           }}/>
       </MapView>
-      <Button title="Set Order Place" onPress={handleConfirm} />
+      <NavBtn text="Set Order Place" onPress={handleConfirm} />
 
       {/* Submit Button */}
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <NavBtn text="Submit" onPress={handleSubmit(onSubmit)} />
       
-      <Button title="Print Token" onPress={print} />
+      <NavBtn text="Print Token" onPress={print} />
     </View>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'expo-router';
 
 import LoginForm from '../components/userLogin';
+import NavBtn from '../components/navBtn';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -34,38 +35,27 @@ export default function Page() {
   <View style={styles.homeMenuContainer}>
     <Text>BottleBuddy</Text>
     <Link href="/userRegistration" asChild>
-      <Button title="Join Up" />
+      <NavBtn text="Join Up!"/>
     </Link>
-
+    <NavBtn text="Login" onPress={print}/>
     {!isAuthing && <Link href="/createOrder" asChild>
-        <Pressable style={styles.homeMenuItem}>
-          <Text>Create an Order!</Text>
-        </Pressable>
+        <NavBtn text="Create an Order"/>
     </Link>}
     {!isAuthing && <Link href="/bottlePickUp" asChild>
-      <Pressable style={styles.homeMenuItem}>
-        <Text>Pick Up Bottles!</Text>
-      </Pressable>
+      <NavBtn text="Pick Up Bottles!"/>
     </Link>}
     {!isAuthing && <Link href="/orderViewFinal" asChild>
-      <Pressable style={styles.homeMenuItem}>
-        <Text>OrderView</Text>
-      </Pressable>
+      <NavBtn text="View your Order"/>
     </Link>}
     {!isAuthing && <Link href="/orderViewCustomer" asChild>
-      <Pressable style={styles.homeMenuItem}>
-        <Text>Collapsible</Text>
-      </Pressable>
+      <NavBtn text="Collapsible"/>
     </Link>}
     <View>
       <Text>
           Currently in active development!{'\n'}{'\n'}
           Made by Tomas Vsetecka
       </Text>
-    </View>
-    <Pressable style={styles.homeMenuItem} onPress={print}>
-      <Text>Login</Text>
-    </Pressable>     
+    </View>    
     {isAuthing && <LoginForm />}
   </View>
 )}
@@ -80,7 +70,5 @@ const styles = StyleSheet.create({
   },
   homeMenuItem: {
     marginBottom: 16,
-    borderColor: 'black',
-    borderWidth: 3,
   }
 })

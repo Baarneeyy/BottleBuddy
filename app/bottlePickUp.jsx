@@ -3,6 +3,7 @@ import { View, Button, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Link } from "expo-router"
 import pb from '../lib/pocketbase';
+import NavBtn from '../components/navBtn';
 
 const pickerScreen = () => {
   const [orders, setOrders] = useState([]);
@@ -59,18 +60,18 @@ const pickerScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Button title="Show Picker Profile" onPress={selectOrder}/>
+      <NavBtn text="Show Picker Profile" onPress={selectOrder}/>
       
       {/*Picker Info */}
       {showProfile && (<View>
           <Text>My completed orders:</Text>
           <Text>Money made:</Text>
           <Text>Current Rating:</Text>
-          <Button title="Select This" onPress={confirmPickup}/>
+          <NavBtn text="Select This" onPress={confirmPickup}/>
         </View>)}
 
       <Link href="/" asChild>
-        <Button title="Main Menu"/>
+        <NavBtn text="Main Menu"/>
       </Link>
       <MapView
         style={{ flex: 1 }}
@@ -96,7 +97,7 @@ const pickerScreen = () => {
           </Marker>
         ))}
       </MapView>
-      <Button title="Load Orders" onPress={loadOrders} />
+      <NavBtn text="Load Orders" onPress={loadOrders} />
     </View>
   );
 };

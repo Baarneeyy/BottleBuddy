@@ -3,6 +3,8 @@ import { View, TextInput, Text, Button, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
 import PocketBase from 'pocketbase';
+import NavBtn from './navBtn';
+
 const pb = new PocketBase('https://c2f2-46-229-238-250.ngrok-free.app');
 
 const LoginForm = ( { onSubmit: parentOnSubmit }) => {
@@ -66,7 +68,7 @@ const LoginForm = ( { onSubmit: parentOnSubmit }) => {
       />
       {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
 
-      <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+      <NavBtn text="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };
